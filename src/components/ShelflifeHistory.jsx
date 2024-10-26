@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 const ShelflifeList = () => {
@@ -18,9 +17,6 @@ const ShelflifeList = () => {
     <div>
       <h1 className="title">Shelflife</h1>
       <h2 className="subtitle">List of Shelflife</h2>
-      <Link to="/shelflifes" className="button is-primary mb-2">
-        Back
-      </Link>
       <table className="table is-striped is-fullwidth">
         <thead>
           <tr>

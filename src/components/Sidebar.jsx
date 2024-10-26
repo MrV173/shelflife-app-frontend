@@ -40,7 +40,7 @@ const Sidebar = () => {
           </li>
           {user && user.role === "user" && (
             <li>
-              <NavLink to={"/shelflifes"}>
+              <NavLink to={"/shelflifes/user-history"}>
                 <IoTime className="pr-2" />
                 Shelflifes
               </NavLink>

@@ -43,6 +43,7 @@ const Navbar = () => {
         <div id="navbarBasicExample" className="navbar-menu">
           <div className="navbar-end">
             <div className="navbar-item">
+              <h1>{user && user.name}</h1>
               <div className="buttons">
                 <button onClick={logout} className="button is-light">
                   Log Out
