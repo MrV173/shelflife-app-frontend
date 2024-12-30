@@ -1,43 +1,45 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const FormAddProduct = () => {
+const FormUpdateRareProduct = () => {
   const [name, setName] = useState("");
   const [shelflifeInHour, setShelflifeInHour] = useState("");
   const [shelflifeInMinute, setShelflifeInMinute] = useState("");
-  const [categoryId, setCategoryId] = useState("");
   const [msg, setMsg] = useState("");
-  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
-    const getCategories = async () => {
+    const getRareProductById = async () => {
       try {
         const response = await axios.get(
-          "https://api.shelflife-app.my.d.shelflife-app.my.id/categories"
+          `https://api.shelflife-app.my.d.shelflife-app.my.id/product/${id}`
         );
-        setCategories(response.data);
+        setName(response.data.name);
+        setShelflifeInHour(response.data.shelflifeInHour);
+        setShelflifeInMinute(response.data.shelflifeInMinute);
       } catch (error) {
-        console.error("error", error);
+        if (error.response) {
+          setMsg(error.response.data.msg);
+        }
       }
     };
-    getCategories();
-  }, []);
+    getRareProductById();
+  }, [id]);
 
-  const createProduct = async (e) => {
+  const updateRareProduct = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/product",
+      await axios.patch(
+        `https://api.shelflife-app.my.d.shelflife-app.my.id/product/${id}`,
         {
           name: name,
           shelflifeInHour: shelflifeInHour,
           shelflifeInMinute: shelflifeInMinute,
-          categoryId: categoryId,
         }
       );
-      navigate("/products");
+      navigate("/rare-products");
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
@@ -48,11 +50,11 @@ const FormAddProduct = () => {
   return (
     <div>
       <h1 className="title">Products</h1>
-      <h2 className="subtitle">Add New Product</h2>
+      <h2 className="subtitle">Add New Rarely Used Product</h2>
       <div className="card is-shadowless">
         <div className="card-content">
           <div className="content">
-            <form onSubmit={createProduct}>
+            <form onSubmit={updateRareProduct}>
               <p className="has-text-centered">{msg}</p>
               <div className="field">
                 <label className="label">Product Name</label>
@@ -62,57 +64,35 @@ const FormAddProduct = () => {
                     className="input"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Name"
                   />
                 </div>
               </div>
               <div className="field">
-                <label className="label">Shelflife in Hour</label>
+                <label className="label">Shelfife In Month</label>
                 <div className="control">
                   <input
                     type="text"
                     className="input"
                     value={shelflifeInHour}
                     onChange={(e) => setShelflifeInHour(e.target.value)}
-                    placeholder="2"
                   />
                 </div>
               </div>
               <div className="field">
-                <label className="label">Shelflife in Minute</label>
+                <label className="label">Shelflife in Day</label>
                 <div className="control">
                   <input
                     type="text"
                     className="input"
                     value={shelflifeInMinute}
                     onChange={(e) => setShelflifeInMinute(e.target.value)}
-                    placeholder="30"
                   />
-                </div>
-              </div>
-              <div className="field">
-                <label className="label">Category</label>
-                <div className="control">
-                  <div className="select">
-                    <select
-                      value={categoryId}
-                      onChange={(e) => setCategoryId(e.target.value)}
-                      required
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map((category) => (
-                        <option key={category.uuid} value={category.uuid}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
                 </div>
               </div>
               <div className="field ">
                 <div className="control">
                   <button type="submit" className="button is-success">
-                    Create
+                    Update
                   </button>
                 </div>
               </div>
@@ -124,4 +104,4 @@ const FormAddProduct = () => {
   );
 };
 
-export default FormAddProduct;
+export default FormUpdateRareProduct;

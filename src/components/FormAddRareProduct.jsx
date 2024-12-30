@@ -1,43 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-const FormAddProduct = () => {
+const FormAddRareProduct = () => {
   const [name, setName] = useState("");
   const [shelflifeInHour, setShelflifeInHour] = useState("");
   const [shelflifeInMinute, setShelflifeInMinute] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [msg, setMsg] = useState("");
   const [categories, setCategories] = useState([]);
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+  const categoryName = "Rarely Used Product";
 
   useEffect(() => {
-    const getCategories = async () => {
+    const getCategory = async () => {
       try {
         const response = await axios.get(
-          "https://api.shelflife-app.my.d.shelflife-app.my.id/categories"
+          `https://api.shelflife-app.my.d.shelflife-app.my.id/category/name/${categoryName}`
         );
-        setCategories(response.data);
+        console.log(response.data);
+        if (Array.isArray(response.data)) {
+          setCategories(response.data);
+        } else {
+          setCategories([response.data]);
+        }
       } catch (error) {
-        console.error("error", error);
+        console.log("error", error);
       }
     };
-    getCategories();
+    getCategory();
   }, []);
 
-  const createProduct = async (e) => {
+  const createRareProduct = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/product",
-        {
-          name: name,
-          shelflifeInHour: shelflifeInHour,
-          shelflifeInMinute: shelflifeInMinute,
-          categoryId: categoryId,
-        }
-      );
-      navigate("/products");
+      await axios.post("http://localhost:5000/product", {
+        name: name,
+        shelflifeInHour: shelflifeInHour,
+        shelflifeInMinute: shelflifeInMinute,
+        categoryId: categoryId,
+      });
+      navigate("/rare-products");
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
@@ -48,11 +51,11 @@ const FormAddProduct = () => {
   return (
     <div>
       <h1 className="title">Products</h1>
-      <h2 className="subtitle">Add New Product</h2>
+      <h2 className="subtitle">Add New Rarely Used Product</h2>
       <div className="card is-shadowless">
         <div className="card-content">
           <div className="content">
-            <form onSubmit={createProduct}>
+            <form onSubmit={createRareProduct}>
               <p className="has-text-centered">{msg}</p>
               <div className="field">
                 <label className="label">Product Name</label>
@@ -67,26 +70,26 @@ const FormAddProduct = () => {
                 </div>
               </div>
               <div className="field">
-                <label className="label">Shelflife in Hour</label>
+                <label className="label">Shelfife In Month</label>
                 <div className="control">
                   <input
                     type="text"
                     className="input"
                     value={shelflifeInHour}
                     onChange={(e) => setShelflifeInHour(e.target.value)}
-                    placeholder="2"
+                    placeholder="Month"
                   />
                 </div>
               </div>
               <div className="field">
-                <label className="label">Shelflife in Minute</label>
+                <label className="label">Shelflife in Day</label>
                 <div className="control">
                   <input
                     type="text"
                     className="input"
                     value={shelflifeInMinute}
                     onChange={(e) => setShelflifeInMinute(e.target.value)}
-                    placeholder="30"
+                    placeholder="Day"
                   />
                 </div>
               </div>
@@ -124,4 +127,4 @@ const FormAddProduct = () => {
   );
 };
 
-export default FormAddProduct;
+export default FormAddRareProduct;

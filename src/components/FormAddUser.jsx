@@ -14,13 +14,16 @@ const FormAddUser = () => {
   const createUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/user", {
-        name: name,
-        email: email,
-        password: password,
-        confPassword: confPassword,
-        role: role,
-      });
+      await axios.post(
+        "https://api.shelflife-app.my.d.shelflife-app.my.id/user",
+        {
+          name: name,
+          email: email,
+          password: password,
+          confPassword: confPassword,
+          role: role,
+        }
+      );
       navigate("/users");
     } catch (error) {
       if (error.response) {
@@ -94,6 +97,7 @@ const FormAddUser = () => {
                       value={role}
                       onChange={(e) => setRole(e.target.value)}
                     >
+                      <option value="">--- Select Role ---</option>
                       <option value="admin">Admin</option>
                       <option value="user">User</option>
                     </select>

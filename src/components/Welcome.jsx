@@ -8,6 +8,7 @@ const Welcome = () => {
   const [selectedWip, setSelectedWip] = useState("");
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
+  const [categoryId, setCategoryId] = useState("");
   const [wips, setWips] = useState([]);
   const [isAlarmActive, setIsAlarmActive] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
@@ -33,12 +34,16 @@ const Welcome = () => {
   }, []);
 
   const getProduct = async () => {
-    const response = await axios.get("http://localhost:5000/products");
+    const response = await axios.get(
+      "https://api.shelflife-app.my.d.shelflife-app.my.id/products"
+    );
     setProducts(response.data);
   };
 
   const getWip = async () => {
-    const response = await axios.get("http://localhost:5000/shelflifes");
+    const response = await axios.get(
+      "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes"
+    );
     setWips(response.data);
   };
 
@@ -52,16 +57,21 @@ const Welcome = () => {
       setSelectedWip(selectedWipData.name);
       setHour(selectedWipData.shelflifeInHour || 0);
       setMinute(selectedWipData.shelflifeInMinute || 0);
+      setCategoryId(selectedWipData.category?.uuid || "");
     }
   };
   const createShelflife = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/shelflife", {
-        name: selectedWip,
-        hour: hour,
-        minute: minute,
-      });
+      await axios.post(
+        "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflife",
+        {
+          name: selectedWip,
+          hour: hour,
+          minute: minute,
+          categoryId: categoryId,
+        }
+      );
       getWip();
     } catch (error) {
       if (error.response) {
@@ -99,6 +109,13 @@ const Welcome = () => {
       .map(Number);
     const currentDate = new Date();
     currentDate.setHours(currentHour, currentMinute, curretnSecond, 0);
+
+    if (
+      endDate.toDateString() !== currentDate.toDateString() &&
+      endDate > currentDate
+    ) {
+      return true; // Jika endDate jatuh setelah hari ini, fungsi waste berjalan
+    }
 
     return currentDate >= endDate;
   };
@@ -181,6 +198,18 @@ const Welcome = () => {
                         />
                       </div>
                     </div>
+                    <div className="field" style={{ display: "none" }}>
+                      <label className="label">Category UUID</label>
+                      <div className="control">
+                        <input
+                          type="text"
+                          className="input"
+                          value={categoryId}
+                          onChange={(e) => setCategoryId(e.target.value)}
+                          readOnly
+                        />
+                      </div>
+                    </div>
                     <div className="field ">
                       <div className="control">
                         <button type="submit" className="button is-success">
@@ -195,7 +224,7 @@ const Welcome = () => {
           </div>
         )}
         {user && user.role === "user" && (
-          <div>
+          <div className="mb-2">
             {!isAlarmActive && (
               <button
                 onClick={() => setIsAlarmActive(true)}
@@ -209,12 +238,13 @@ const Welcome = () => {
 
         {user && user.role === "user" && (
           <div className="grid">
-            <table className="table is-striped is-fullwidth">
+            <table className="table is-bordered is-striped is-fullwidth">
               <thead>
-                <tr>
+                <tr className="is-link">
                   <th>No</th>
                   <th>Product Name</th>
-                  <th>Date</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
                   <th>Start of Shelflife</th>
                   <th>End of Shelflife</th>
                   <th></th>
@@ -250,7 +280,14 @@ const Welcome = () => {
                         color: waste(wip.endShelflife) ? "white" : "black",
                       }}
                     >
-                      {wip.date}
+                      {wip.startDate}
+                    </td>
+                    <td
+                      style={{
+                        color: waste(wip.endShelflife) ? "white" : "black",
+                      }}
+                    >
+                      {wip.endDate}
                     </td>
                     <td
                       style={{

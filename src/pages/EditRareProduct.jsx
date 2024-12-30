@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import Layout from "./Layout";
-import ShelflifeList from "../components/ShelflifeLists";
+import FormUpdateRareProduct from "../components/FormUpdateRareProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getMe } from "../features/authSlice";
 
-const Dashboard = () => {
+const EditRareProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isError } = useSelector((state) => state.auth);
@@ -19,12 +19,11 @@ const Dashboard = () => {
       navigate("/");
     }
   }, [isError, navigate]);
-
   return (
     <Layout>
-      <ShelflifeList />
+      <FormUpdateRareProduct />
     </Layout>
   );
 };
 
-export default Dashboard;
+export default EditRareProduct;

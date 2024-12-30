@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import Layout from "./Layout";
-import ShelflifeList from "../components/ShelflifeLists";
+import CategoriesList from "../components/CategoriesList";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getMe } from "../features/authSlice";
-
-const Dashboard = () => {
+const Categories = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isError } = useSelector((state) => state.auth);
@@ -19,12 +18,11 @@ const Dashboard = () => {
       navigate("/");
     }
   }, [isError, navigate]);
-
   return (
     <Layout>
-      <ShelflifeList />
+      <CategoriesList />
     </Layout>
   );
 };
 
-export default Dashboard;
+export default Categories;

@@ -5,6 +5,9 @@ import {
   IoTime,
   IoHome,
   IoLogOut,
+  IoFastFood,
+  IoFastFoodSharp,
+  IoCart,
 } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,10 +37,24 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink to={"/products"}>
-              <IoPricetag className="pr-2" />
+              <IoFastFood className="pr-2" />
               Products
             </NavLink>
           </li>
+          <li>
+            <NavLink to={"/rare-products"}>
+              <IoCart className="pr-2" />
+              Rarely Used Products
+            </NavLink>
+          </li>
+          {user && user.role === "admin" && (
+            <li>
+              <NavLink to={"/categories"}>
+                <IoPricetag className="pr-2" />
+                Category
+              </NavLink>
+            </li>
+          )}
           {user && user.role === "user" && (
             <li>
               <NavLink to={"/shelflifes/user-history"}>

@@ -10,12 +10,16 @@ const Userlist = () => {
   }, []);
 
   const getUsers = async () => {
-    const response = await axios.get("http://localhost:5000/users");
+    const response = await axios.get(
+      "https://api.shelflife-app.my.d.shelflife-app.my.id/users"
+    );
     setUsers(response.data);
   };
 
   const deleteUser = async (userId) => {
-    await axios.delete(`http://localhost:5000/user/${userId}`);
+    await axios.delete(
+      `https://api.shelflife-app.my.d.shelflife-app.my.id/user/${userId}`
+    );
     getUsers();
   };
 

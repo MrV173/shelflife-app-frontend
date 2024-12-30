@@ -13,7 +13,9 @@ const FormEditProduct = () => {
   useEffect(() => {
     const getProductById = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/product/${id}`);
+        const response = await axios.get(
+          `https://api.shelflife-app.my.d.shelflife-app.my.id/product/${id}`
+        );
         setName(response.data.name);
         setShelflifeInHour(response.data.shelflifeInHour);
         setShelflifeInMinute(response.data.shelflifeInMinute);
@@ -29,11 +31,14 @@ const FormEditProduct = () => {
   const updateProduct = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/product/${id}`, {
-        name: name,
-        shelflifeInHour: shelflifeInHour,
-        shelflifeInMinute: shelflifeInMinute,
-      });
+      await axios.patch(
+        `https://api.shelflife-app.my.d.shelflife-app.my.id/product/${id}`,
+        {
+          name: name,
+          shelflifeInHour: shelflifeInHour,
+          shelflifeInMinute: shelflifeInMinute,
+        }
+      );
       navigate("/products");
     } catch (error) {
       if (error.response) {
