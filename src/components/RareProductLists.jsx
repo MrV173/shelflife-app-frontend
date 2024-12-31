@@ -7,21 +7,21 @@ const RareProductList = () => {
   const [rareProducts, setRareProducts] = useState([]);
   const { user } = useSelector((state) => state.auth);
   const categoryName = "Rarely Used Product";
+  const api = process.env.REACT_APP_SERVER;
+
   useEffect(() => {
     getRareProducts();
   }, []);
 
   const getRareProducts = async () => {
     const response = await axios.get(
-      `https://api.shelflife-app.my.d.shelflife-app.my.id/products/category-name?categoryName=${categoryName}`
+      `${api}/products/category-name?categoryName=${categoryName}`
     );
     setRareProducts(response.data);
   };
 
   const deleteRareProduct = async (productId) => {
-    await axios.delete(
-      `https://api.shelflife-app.my.d.shelflife-app.my.id/product/${productId}`
-    );
+    await axios.delete(`${api}/product/${productId}`);
     getRareProducts();
   };
 

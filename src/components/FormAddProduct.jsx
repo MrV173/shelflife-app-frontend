@@ -10,13 +10,12 @@ const FormAddProduct = () => {
   const [msg, setMsg] = useState("");
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const api = process.env.REACT_APP_SERVER;
 
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const response = await axios.get(
-          "https://api.shelflife-app.my.d.shelflife-app.my.id/categories"
-        );
+        const response = await axios.get(`${api}/categories`);
         setCategories(response.data);
       } catch (error) {
         console.error("error", error);
@@ -28,15 +27,12 @@ const FormAddProduct = () => {
   const createProduct = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/product",
-        {
-          name: name,
-          shelflifeInHour: shelflifeInHour,
-          shelflifeInMinute: shelflifeInMinute,
-          categoryId: categoryId,
-        }
-      );
+      await axios.post(`${api}/product`, {
+        name: name,
+        shelflifeInHour: shelflifeInHour,
+        shelflifeInMinute: shelflifeInMinute,
+        categoryId: categoryId,
+      });
       navigate("/products");
     } catch (error) {
       if (error.response) {

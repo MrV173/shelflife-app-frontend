@@ -11,13 +11,14 @@ const FormAddShelflifeRareProduct = () => {
   const [day, setDay] = useState(0);
   const [error, setError] = useState("");
   const [selectedWip, setSelectedWip] = useState("");
+  const api = process.env.REACT_APP_SERVER;
 
   const categoryName = "Rarely Used Product";
 
   useEffect(() => {
     const getRareProducts = async () => {
       const response = await axios.get(
-        `https://api.shelflife-app.my.d.shelflife-app.my.id/products/category-name?categoryName=${categoryName}`
+        `${api}/products/category-name?categoryName=${categoryName}`
       );
       setRareProducts(response.data);
     };
@@ -26,7 +27,7 @@ const FormAddShelflifeRareProduct = () => {
 
   const getShelflifeRareProduct = async () => {
     const response = await axios.get(
-      `https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes/rare-product/${categoryName}`
+      `${api}/shelflifes/rare-product/${categoryName}`
     );
     setData(response.data);
   };
@@ -48,15 +49,12 @@ const FormAddShelflifeRareProduct = () => {
   const createShelflife = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflife/rare-product",
-        {
-          name: selectedWip,
-          month: month,
-          day: day,
-          categoryId: categoryId,
-        }
-      );
+      await axios.post(`${api}/shelflife/rare-product`, {
+        name: selectedWip,
+        month: month,
+        day: day,
+        categoryId: categoryId,
+      });
       await getShelflifeRareProduct();
     } catch {
       if (error.response) {

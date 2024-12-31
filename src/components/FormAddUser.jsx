@@ -10,20 +10,18 @@ const FormAddUser = () => {
   const [role, setRole] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+  const api = process.env.REACT_APP_SERVER;
 
   const createUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/user",
-        {
-          name: name,
-          email: email,
-          password: password,
-          confPassword: confPassword,
-          role: role,
-        }
-      );
+      await axios.post(`${api}/user`, {
+        name: name,
+        email: email,
+        password: password,
+        confPassword: confPassword,
+        role: role,
+      });
       navigate("/users");
     } catch (error) {
       if (error.response) {

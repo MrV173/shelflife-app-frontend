@@ -11,13 +11,12 @@ const FormEditUser = () => {
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
+  const api = process.env.REACT_APP_SERVER;
 
   useEffect(() => {
     const getUserById = async () => {
       try {
-        const response = await axios.get(
-          `https://api.shelflife-app.my.d.shelflife-app.my.id/user/${id}`
-        );
+        const response = await axios.get(`${api}/user/${id}`);
         setName(response.data.name);
         setEmail(response.data.email);
         setRole(response.data.role);
@@ -33,16 +32,13 @@ const FormEditUser = () => {
   const updateUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(
-        `https://api.shelflife-app.my.d.shelflife-app.my.id/user/${id}`,
-        {
-          name: name,
-          email: email,
-          password: password,
-          confPassword: confPassword,
-          role: role,
-        }
-      );
+      await axios.patch(`${api}/user/${id}`, {
+        name: name,
+        email: email,
+        password: password,
+        confPassword: confPassword,
+        role: role,
+      });
       navigate("/users");
     } catch (error) {
       if (error.response) {

@@ -9,17 +9,16 @@ const initialState = {
   message: "",
 };
 
+const api = process.env.REACT_APP_SERVER;
+
 export const LoginUser = createAsyncThunk(
   "user/LoginUser",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/login",
-        {
-          email: user.email,
-          password: user.password,
-        }
-      );
+      const response = await axios.post(`${api}/login`, {
+        email: user.email,
+        password: user.password,
+      });
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -32,9 +31,7 @@ export const LoginUser = createAsyncThunk(
 
 export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
   try {
-    const response = await axios.get(
-      "https://api.shelflife-app.my.d.shelflife-app.my.id/me"
-    );
+    const response = await axios.get(`${api}/me`);
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -45,9 +42,7 @@ export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
 });
 
 export const LogOut = createAsyncThunk("user/LogOut", async () => {
-  await axios.delete(
-    "https://api.shelflife-app.my.d.shelflife-app.my.id/logout"
-  );
+  await axios.delete(`${api}/logout`);
 });
 
 export const authSlice = createSlice({

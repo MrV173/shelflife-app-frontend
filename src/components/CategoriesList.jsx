@@ -7,34 +7,28 @@ const CategoryList = () => {
   const [name, setName] = useState("");
   const { user } = useSelector((state) => state.auth);
   const [msg, setMsg] = useState("");
+  const api = process.env.REACT_APP_SERVER;
 
   useEffect(() => {
     getCategories();
   }, []);
 
   const getCategories = async () => {
-    const response = await axios.get(
-      "https://api.shelflife-app.my.d.shelflife-app.my.id/categories"
-    );
+    const response = await axios.get(`${api}/categories`);
     setCategories(response.data);
   };
 
   const deleteCategory = async (categoryId) => {
-    await axios.delete(
-      `https://api.shelflife-app.my.d.shelflife-app.my.id/category/${categoryId}`
-    );
+    await axios.delete(`${api}/category/${categoryId}`);
     getCategories();
   };
 
   const createCategory = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/category",
-        {
-          name: name,
-        }
-      );
+      await axios.post(`${api}/category`, {
+        name: name,
+      });
       getCategories();
     } catch (error) {
       if (error.message) {

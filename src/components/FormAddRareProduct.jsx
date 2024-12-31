@@ -11,12 +11,13 @@ const FormAddRareProduct = () => {
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const categoryName = "Rarely Used Product";
+  const api = process.env.REACT_APP_SERVER;
 
   useEffect(() => {
     const getCategory = async () => {
       try {
         const response = await axios.get(
-          `https://api.shelflife-app.my.d.shelflife-app.my.id/category/name/${categoryName}`
+          `${api}/category/name/${categoryName}`
         );
         console.log(response.data);
         if (Array.isArray(response.data)) {

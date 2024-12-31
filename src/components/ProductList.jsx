@@ -5,12 +5,10 @@ import { useSelector } from "react-redux";
 import {
   IoDesktop,
   IoCloud,
-  IoWarning,
   IoBag,
   IoMedical,
   IoServer,
   IoEgg,
-  IoCart,
 } from "react-icons/io5";
 
 const ProductList = () => {
@@ -22,15 +20,14 @@ const ProductList = () => {
   const [activeButton, setActiveButton] = useState({});
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(false);
+  const api = process.env.REACT_APP_SERVER;
 
   useEffect(() => {
     fetchData(activeTab);
   }, [activeTab, reload]);
 
   const deleteProduct = async (productId) => {
-    await axios.delete(
-      `https://api.shelflife-app.my.d.shelflife-app.my.id/product/${productId}`
-    );
+    await axios.delete(`${api}/product/${productId}`);
     setReload((prev) => !prev);
   };
 
@@ -39,28 +36,22 @@ const ProductList = () => {
       let url = "";
       switch (tab) {
         case "Hot Display":
-          url =
-            "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes/category-name?categoryName=Hot Display";
+          url = `${api}/shelflifes/category-name?categoryName=Hot Display`;
           break;
         case "Thawing":
-          url =
-            "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes/category-name?categoryName=Thawing";
+          url = `${api}/shelflifes/category-name?categoryName=Thawing`;
           break;
         case "Bain Marie":
-          url =
-            "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes/category-name?categoryName=Bain Marie";
+          url = `${api}/shelflifes/category-name?categoryName=Bain Marie`;
           break;
         case "Suhu Ruang":
-          url =
-            "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes/category-name?categoryName=Suhu Ruang";
+          url = `${api}/shelflifes/category-name?categoryName=Suhu Ruang`;
           break;
         case "Bar":
-          url =
-            "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes/category-name?categoryName=Bar";
+          url = `${api}/shelflifes/category-name?categoryName=Bar`;
           break;
         case "Open Pack":
-          url =
-            "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes/category-name?categoryName=Open Pack";
+          url = `${api}/shelflifes/category-name?categoryName=Open Pack`;
           break;
         default:
           break;
@@ -75,9 +66,7 @@ const ProductList = () => {
 
   useEffect(() => {
     const getCategories = async () => {
-      const response = await axios.get(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/categories"
-      );
+      const response = await axios.get(`${api}/categories`);
       setCategories(response.data);
     };
     getCategories();
@@ -91,7 +80,7 @@ const ProductList = () => {
     const getProduct = async () => {
       if (selectedCategory) {
         const response = await axios.get(
-          `https://api.shelflife-app.my.d.shelflife-app.my.id/products/category-name?categoryName=${selectedCategory}`
+          `${api}/products/category-name?categoryName=${selectedCategory}`
         );
         setProducts(response.data);
       }

@@ -9,17 +9,15 @@ const Userlist = () => {
     getUsers();
   }, []);
 
+  const api = process.env.REACT_APP_SERVER;
+
   const getUsers = async () => {
-    const response = await axios.get(
-      "https://api.shelflife-app.my.d.shelflife-app.my.id/users"
-    );
+    const response = await axios.get(`${api}/users`);
     setUsers(response.data);
   };
 
   const deleteUser = async (userId) => {
-    await axios.delete(
-      `https://api.shelflife-app.my.d.shelflife-app.my.id/user/${userId}`
-    );
+    await axios.delete(`${api}/user/${userId}`);
     getUsers();
   };
 

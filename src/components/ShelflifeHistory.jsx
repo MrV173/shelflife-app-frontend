@@ -5,6 +5,7 @@ const ShelflifeList = () => {
   const [shelflifes, setShelflife] = useState([]);
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
+  const api = process.env.REACT_APP_SERVER;
 
   useEffect(() => {
     shelflifeByDate();
@@ -18,7 +19,7 @@ const ShelflifeList = () => {
       }
 
       const response = await axios.get(
-        `https://api.shelflife-app.my.d.shelflife-app.my.id/user-shelflifes/history?date=${date}`
+        `${api}/user-shelflifes/history?date=${date}`
       );
       setShelflife(response.data);
     } catch (error) {

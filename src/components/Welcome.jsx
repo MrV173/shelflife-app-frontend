@@ -17,6 +17,7 @@ const Welcome = () => {
   const audioRefs = useRef({});
   const [startAlarm, setStartAlarm] = useState({});
   const { user } = useSelector((state) => state.auth);
+  const api = process.env.REACT_APP_SERVER;
 
   useEffect(() => {
     getWip();
@@ -34,16 +35,12 @@ const Welcome = () => {
   }, []);
 
   const getProduct = async () => {
-    const response = await axios.get(
-      "https://api.shelflife-app.my.d.shelflife-app.my.id/products"
-    );
+    const response = await axios.get(`${api}/products`);
     setProducts(response.data);
   };
 
   const getWip = async () => {
-    const response = await axios.get(
-      "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflifes"
-    );
+    const response = await axios.get(`${api}/shelflifes`);
     setWips(response.data);
   };
 
@@ -63,15 +60,12 @@ const Welcome = () => {
   const createShelflife = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "https://api.shelflife-app.my.d.shelflife-app.my.id/shelflife",
-        {
-          name: selectedWip,
-          hour: hour,
-          minute: minute,
-          categoryId: categoryId,
-        }
-      );
+      await axios.post(`${api}/shelflife`, {
+        name: selectedWip,
+        hour: hour,
+        minute: minute,
+        categoryId: categoryId,
+      });
       getWip();
     } catch (error) {
       if (error.response) {
@@ -114,7 +108,7 @@ const Welcome = () => {
       endDate.toDateString() !== currentDate.toDateString() &&
       endDate > currentDate
     ) {
-      return true; // Jika endDate jatuh setelah hari ini, fungsi waste berjalan
+      return true;
     }
 
     return currentDate >= endDate;
