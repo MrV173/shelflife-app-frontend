@@ -35,7 +35,7 @@ const FormAddRareProduct = () => {
   const createRareProduct = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/product", {
+      await axios.post(`${api}/product`, {
         name: name,
         shelflifeInHour: shelflifeInHour,
         shelflifeInMinute: shelflifeInMinute,
