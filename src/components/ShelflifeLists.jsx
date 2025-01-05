@@ -29,6 +29,7 @@ const ShelflifeList = () => {
   const [selectedWip, setSelectedWip] = useState("");
   const [activeButton, setActiveButton] = useState({});
   const audioRefs = useRef({});
+  const [mutedAlarm, setMutedAlarms] = useState({});
   const { user } = useSelector((state) => state.auth);
   const api = process.env.REACT_APP_SERVER;
 
@@ -176,6 +177,10 @@ const ShelflifeList = () => {
     if (audioRefs.current[uuid]) {
       audioRefs.current[uuid].volume = 0;
       audioRefs.current[uuid].currentTime = 0;
+      setMutedAlarms((prev) => ({
+        ...prev,
+        [uuid]: true,
+      }));
     }
   };
 
@@ -348,11 +353,11 @@ const ShelflifeList = () => {
         <table className="table is-striped is-fullwidth is-narrow">
           <thead>
             <tr className="is-link">
-              <th>Product Name</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Start of Shelflife</th>
-              <th>End of Shelflife</th>
+              <th className="has-text-white">Product Name</th>
+              <th className="has-text-white">Start Date</th>
+              <th className="has-text-white">End Date</th>
+              <th className="has-text-white">Start of Shelflife</th>
+              <th className="has-text-white">End of Shelflife</th>
               <th></th>
             </tr>
           </thead>
@@ -364,13 +369,18 @@ const ShelflifeList = () => {
                   item.endShelflife,
                   item.uuid
                 );
+                const isMuted = mutedAlarm[item.uuid] || false;
                 const isButtonActive = activeButton[item.uuid] || false;
                 return (
                   <tr
                     key={index}
                     style={{
                       fontWeight: "bolder",
-                      backgroundColor: isWaste ? "red" : "transparent",
+                      backgroundColor: isMuted
+                        ? "green"
+                        : isWaste
+                        ? "red"
+                        : "transparent",
                       color: isWaste ? "white" : "black",
                     }}
                   >
@@ -396,10 +406,13 @@ const ShelflifeList = () => {
                     <td>
                       {isButtonActive && (
                         <button
-                          className="button is-light is-small is-fullwidth "
+                          className="button is-small is-fullwidth has-text-weight-bold has-text-danger is-inverted is-rounded is-outlined"
                           onClick={() => muteAlarm(item.uuid)}
                         >
                           Waste
+                          <span className="is-size-6 has-text-danger has-text-weigt-bold ml-2 mt-1">
+                            <IoWarning />
+                          </span>
                         </button>
                       )}
                     </td>
