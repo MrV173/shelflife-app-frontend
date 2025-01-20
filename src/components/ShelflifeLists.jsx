@@ -97,11 +97,20 @@ const ShelflifeList = () => {
         categoryId: categoryId,
       });
       await fetchData(activeTab);
-      console.log("data refreshed");
     } catch (error) {
       if (error.response) {
         setError(error.response.data.msg);
       }
+    }
+  };
+
+  const updateStatus = async (uuid, status) => {
+    try {
+      await axios.patch(`${api}/shelflifes/${uuid}`, { status: status });
+      await fetchData(activeTab);
+      console.log("status updated");
+    } catch (error) {
+      console.error(error.response?.data?.msg);
     }
   };
 
@@ -182,6 +191,16 @@ const ShelflifeList = () => {
         [uuid]: true,
       }));
     }
+  };
+
+  const handleMuteandWaste = (uuid) => {
+    muteAlarm(uuid);
+    updateStatus(uuid, "Waste");
+  };
+
+  const handleUpdateandHidden = (uuid) => {
+    muteAlarm(uuid);
+    updateStatus(uuid, "Habis");
   };
 
   return (
@@ -359,66 +378,74 @@ const ShelflifeList = () => {
               <th className="has-text-white">Start of Shelflife</th>
               <th className="has-text-white">End of Shelflife</th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {data.length > 0 ? (
-              data.map((item, index) => {
-                const isWaste = waste(
-                  item.endDate,
-                  item.endShelflife,
-                  item.uuid
-                );
-                const isMuted = mutedAlarm[item.uuid] || false;
-                const isButtonActive = activeButton[item.uuid] || false;
-                return (
-                  <tr
-                    key={index}
-                    style={{
-                      fontWeight: "bolder",
-                      backgroundColor: isMuted
-                        ? "green"
-                        : isWaste
-                        ? "red"
-                        : "transparent",
-                      color: isWaste ? "white" : "black",
-                    }}
-                  >
-                    <td
+              data
+                .filter((item) => item.status === "none")
+                .map((item, index) => {
+                  const isWaste = waste(
+                    item.endDate,
+                    item.endShelflife,
+                    item.uuid
+                  );
+                  const isMuted = mutedAlarm[item.uuid] || false;
+                  const isButtonActive = activeButton[item.uuid] || false;
+                  return (
+                    <tr
+                      key={index}
                       style={{
+                        fontWeight: "bolder",
+                        backgroundColor: isMuted
+                          ? "green"
+                          : isWaste
+                          ? "red"
+                          : "transparent",
                         color: isWaste ? "white" : "black",
                       }}
                     >
-                      {item.name}
-                    </td>
-                    <td style={{ color: isWaste ? "white" : "black" }}>
-                      {item.startDate}
-                    </td>
-                    <td style={{ color: isWaste ? "white" : "black" }}>
-                      {item.endDate}
-                    </td>
-                    <td style={{ color: isWaste ? "white" : "black" }}>
-                      {item.startShelflife}
-                    </td>
-                    <td style={{ color: isWaste ? "white" : "black" }}>
-                      {item.endShelflife}
-                    </td>
-                    <td>
-                      {isButtonActive && (
+                      <td
+                        style={{
+                          color: isWaste ? "white" : "black",
+                        }}
+                      >
+                        {item.name}
+                      </td>
+                      <td style={{ color: isWaste ? "white" : "black" }}>
+                        {item.startDate}
+                      </td>
+                      <td style={{ color: isWaste ? "white" : "black" }}>
+                        {item.endDate}
+                      </td>
+                      <td style={{ color: isWaste ? "white" : "black" }}>
+                        {item.startShelflife}
+                      </td>
+                      <td style={{ color: isWaste ? "white" : "black" }}>
+                        {item.endShelflife}
+                      </td>
+                      <td>
                         <button
-                          className="button is-small is-fullwidth has-text-weight-bold has-text-danger is-inverted is-rounded is-outlined"
-                          onClick={() => muteAlarm(item.uuid)}
+                          className="button is-small is-fullwidth has-text-weight-bold has-text-danger is-rounded "
+                          onClick={() => handleUpdateandHidden(item.uuid)}
                         >
-                          Waste
-                          <span className="is-size-6 has-text-danger has-text-weigt-bold ml-2 mt-1">
-                            <IoWarning />
-                          </span>
+                          Habis
                         </button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })
+                      </td>
+                      <td>
+                        {isButtonActive && (
+                          <button
+                            className="button is-small is-fullwidth has-text-weight-bold has-text-danger is-inverted is-rounded is-outlined"
+                            onClick={() => handleMuteandWaste(item.uuid)}
+                          >
+                            Waste
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
             ) : (
               <tr>
                 <td>

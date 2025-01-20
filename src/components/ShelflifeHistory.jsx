@@ -4,6 +4,7 @@ import axios from "axios";
 const ShelflifeList = () => {
   const [shelflifes, setShelflife] = useState([]);
   const [date, setDate] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const api = process.env.REACT_APP_SERVER;
 
@@ -18,10 +19,13 @@ const ShelflifeList = () => {
         return;
       }
 
-      const response = await axios.get(
-        `${api}/user-shelflifes/history?date=${date}`
-      );
+      const query = `${api}/user-shelflifes/history?date=${date}${
+        name ? `&name=${encodeURIComponent(name)}` : ""
+      }`;
+
+      const response = await axios.get(query);
       setShelflife(response.data);
+      setError("");
     } catch (error) {
       if (error.response && error.response.data && error.response.data.msg) {
         setError(error.response.data.msg);
@@ -51,15 +55,30 @@ const ShelflifeList = () => {
       <h2 className="subtitle">List of Shelflife</h2>
       <div>
         <form onSubmit={handleSearch} className="box">
-          <div className="field has-addons">
+          <div className="field">
+            <label className="label">Nama Produk</label>
             <div className="control">
               <input
-                type="date"
+                type="text"
                 className="input"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                placeholder="Cari berdasarkan nama"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
+          </div>
+          <div className="field">
+            <div className="field has-addons">
+              <div className="control">
+                <input
+                  type="date"
+                  className="input"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+              </div>
+            </div>
+
             <div className="control">
               <button type="submit" className="button is-primary">
                 Search
@@ -71,12 +90,13 @@ const ShelflifeList = () => {
         <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
           <thead>
             <tr className="is-link">
-              <th>No</th>
-              <th>Product Name</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Start of Shelflife</th>
-              <th>End of Shelflife</th>
+              <th className="has-text-white">No</th>
+              <th className="has-text-white">Product Name</th>
+              <th className="has-text-white">Start Date</th>
+              <th className="has-text-white">End Date</th>
+              <th className="has-text-white">Start of Shelflife</th>
+              <th className="has-text-white">End of Shelflife</th>
+              <th className="has-text-white">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -89,6 +109,7 @@ const ShelflifeList = () => {
                   <td>{shelflife.endDate}</td>
                   <td>{shelflife.startShelflife}</td>
                   <td>{shelflife.endShelflife}</td>
+                  <td>{shelflife.status}</td>
                 </tr>
               ))
             ) : (
